@@ -370,19 +370,22 @@ if (require("RColorBrewer")) {
 # here: "data/transactions_single_format.csv" and loaded as follows:
 transactions_single_format <-
   read.transactions("data/transactions_single_format.csv",
-                    format = "single", cols = c(1, 2))
+                    format = "single", cols = c(1, 2), header = TRUE, rm.duplicates = TRUE, sep = ",")
 
 View(transactions_single_format)
 print(transactions_single_format)
-
+summary(transactions_single_format)
+inspect(transactions_single_format)
 ## FORMAT 2: Basket Format----
 # An example of the single format transaction data is presented
 # here: "data/transactions_basket_format.csv" and loaded as follows:
 transactions_basket_format <-
   read.transactions("data/transactions_basket_format.csv",
-                    format = "basket", sep = ",", cols = 2)
+                    format = "basket", sep = ",", cols = 2, header = TRUE, rm.duplicates = TRUE,)
 View(transactions_basket_format)
 print(transactions_basket_format)
+summary(transactions_basket_format)
+inspect(transactions_basket_format)
 
 ## The online retail dataset ----
 # We will use the "Online Retail (2015)" dataset available on UCI ML repository
@@ -632,13 +635,13 @@ summary(tr_stock_code)
 
 # STEP 2. Basic EDA ----
 # Create an item frequency plot for the top 10 items
-itemFrequencyPlot(tr_stock_code, topN = 10, type = "absolute",
+itemFrequencyPlot(tr, topN = 10, type = "absolute",
                   col = brewer.pal(8, "Pastel2"),
                   main = "Absolute Item Frequency Plot",
                   horiz = TRUE,
                   mai = c(2, 2, 2, 2))
 
-itemFrequencyPlot(tr_stock_code, topN = 10, type = "relative",
+itemFrequencyPlot(tr, topN = 10, type = "relative",
                   col = brewer.pal(8, "Pastel2"),
                   main = "Relative Item Frequency Plot",
                   horiz = TRUE,
