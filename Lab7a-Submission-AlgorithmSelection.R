@@ -415,42 +415,42 @@ print(paste("MAE =", sprintf(mae, fmt = "%#.4f")))
 ## 1.  Classification and Regression Trees ----
 
 ### 1.c. Decision tree for a classification problem with caret ----
-#### Load and split the dataset ----
-data(PimaIndiansDiabetes)
+# Load and split the dataset
+Student_Marks <- read.csv("data/Student_Marks.csv")
 
 # Define a 70:30 train:test data split of the dataset.
-train_index <- createDataPartition(PimaIndiansDiabetes$diabetes,
-                                   p = 0.7,
-                                   list = FALSE)
-pima_indians_diabetes_train <- PimaIndiansDiabetes[train_index, ]
-pima_indians_diabetes_test <- PimaIndiansDiabetes[-train_index, ]
-
-#### Train the model ----
 set.seed(7)
-# We apply the 5-fold cross validation resampling method
+train_index <- createDataPartition(Student_Marks$Marks, p = 0.7, list = FALSE)
+student_train <- Student_Marks[train_index, ]
+student_test <- Student_Marks[-train_index, ]
+
+# Train the model using 5-fold cross-validation
 train_control <- trainControl(method = "cv", number = 5)
-diabetes_caret_model_rpart <- train(diabetes ~ ., data = PimaIndiansDiabetes,
-                                    method = "rpart", metric = "Accuracy",
-                                    trControl = train_control)
+Marks_caret_model_rpart <- train(Marks ~ number_courses, data = student_train,
+                                 method = "rpart", metric = "MAE",
+                                 trControl = train_control)
 
-#### Display the model's details ----
-print(diabetes_caret_model_rpart)
+# Display the model's details
+print(Marks_caret_model_rpart)
 
-#### Make predictions ----
-predictions <- predict(diabetes_model_rpart,
-                       pima_indians_diabetes_test[, 1:8],
-                       type = "class")
+# Make predictions using the caret-trained model
+predictions <- predict(Marks_caret_model_rpart, newdata = student_test)
 
-#### Display the model's evaluation metrics ----
-table(predictions, pima_indians_diabetes_test$diabetes)
-
-confusion_matrix <-
-  caret::confusionMatrix(predictions,
-                         pima_indians_diabetes_test[, 1:9]$diabetes)
+# Display the model's evaluation metrics
+confusion_matrix <- confusionMatrix(predictions, reference = student_test$Marks)
 print(confusion_matrix)
 
-fourfoldplot(as.table(confusion_matrix), color = c("grey", "lightblue"),
+# Create a fourfold plot of the confusion matrix
+fourfoldplot(confusion_matrix, color = c("grey", "lightblue"),
              main = "Confusion Matrix")
+
+
+
+
+
+
+
+
 
 ### 1.d. Decision tree for a regression problem with CARET ----
 #### Load and split the dataset ----
