@@ -76,7 +76,7 @@ if (require("rpart")) {
 
 # A. Linear Algorithms ----
 ## 1. Linear Regression ----
-### 1.a. Linear Regression using Ordinary Least Squares without caret ----.
+### Linear Regression using Ordinary Least Squares without caret ----.
 
 Student_Marks <- read_csv("data/Student_Marks.csv")
 View(Student_Marks)
@@ -151,7 +151,7 @@ mae <- mean(absolute_errors)
 print(paste("MAE =", sprintf(mae, fmt = "%#.4f")))
 
 ## 2. Logistic Regression ----
-### 2.b. Logistic Regression with caret ----
+### Logistic Regression with caret ----
 library(readr)
 Customer_Churn <- read_csv("data/Customer Churn.csv")
 Customer_Churn$Churn <- ifelse(Customer_Churn$Churn == "No", 0, 1)
@@ -177,7 +177,7 @@ confusion_matrix <- table(predictions, Customer_Churn_test$Churn)
 print(confusion_matrix)
 
 ## 3. Linear Discriminant Analysis ----
-### 3.a. Linear Discriminant Analysis without caret
+### Linear Discriminant Analysis without caret
 library(readr)
 Crop_recommendation <- read_csv("data/Crop_recommendation.csv")
 Crop_recommendation$label <- ifelse(Crop_recommendation$label == "rice", 0, 1)
@@ -200,7 +200,7 @@ predictions <- predict(label_model_lda, Crop_recommendation_test[, 1:7])
 table(predictions$class, Crop_recommendation_test$label)
 
 
-### 3.b. Linear Discriminant Analysis with caret ----
+### Linear Discriminant Analysis with caret ----
 library(readr)
 Crop_recommendation <- read_csv("data/Crop_recommendation.csv")
 Crop_recommendation$label <- ifelse(Crop_recommendation$label == "rice", 0, 1)
@@ -278,7 +278,7 @@ print(paste("MAE =", sprintf(mae, fmt = "%#.4f")))
 
 # B. Non-Linear Algorithms ----
 ## 1.  Classification and Regression Trees ----
-### 1.b. Decision tree for a regression problem without CARET ----
+### Decision tree for a regression problem without CARET ----
 #### Load and split the dataset ----
 library(readr)
 Customer_Churn <- read_csv("data/Customer Churn.csv")
@@ -338,20 +338,16 @@ fourfoldplot(as.table(confusion_matrix), color = c("grey", "lightblue"),
 
 ## 3.  k Nearest Neighbours----
 ## kNN for a classification problem with CARET's train function ----
-# Load and split the dataset
 library(readr)
 Customer_Churn <- read_csv("data/Customer Churn.csv")
 
-# Split the dataset
 set.seed(7)
 sample_indices <- sample(seq_len(nrow(Customer_Churn)), size = 0.7 * nrow(Customer_Churn))
 Churn_train <- Customer_Churn[sample_indices, ]
 Churn_test <- Customer_Churn[-sample_indices, ]
 
-# Define the train control settings for 10-fold cross-validation
 train_control <- trainControl(method = "cv", number = 10)
 
-# Train the k-NN model with data standardization
 Churn_caret_model_knn <- train(Churn ~ ., data = Churn_train,
                                method = "knn", metric = "Accuracy",
                                preProcess = c("center", "scale"),
@@ -359,44 +355,33 @@ Churn_caret_model_knn <- train(Churn ~ ., data = Churn_train,
 
 print(Churn_caret_model_knn)
 
-#### Make predictions ----
 predictions <- predict(Churn_caret_model_knn, Churn_test)
 
-# Display the model's evaluation metrics
 confusion_matrix <- caret::confusionMatrix(predictions, Churn_test$Churn)
 print(confusion_matrix)
 
-# Create a confusion matrix plot
 fourfoldplot(as.table(confusion_matrix), color = c("grey", "lightblue"),
              main = "Confusion Matrix")
 
 ## 4.  Support Vector Machines----
-### 4.a. SVM Classifier for a classification problem without CARET ----
-# Load and split the dataset
+### SVM Classifier for a classification problem without CARET ----
 library(readr)
 Customer_Churn <- read_csv("data/Customer Churn.csv")
 
-# Split the dataset
 set.seed(7)
 sample_indices <- sample(seq_len(nrow(Customer_Churn)), size = 0.7 * nrow(Customer_Churn))
 Churn_train <- Customer_Churn[sample_indices, ]
 Churn_test <- Customer_Churn[-sample_indices, ]
 
-# Train the model
 Churn_model_svm <- ksvm(Churn ~ ., data = Churn_train, kernel = "rbfdot")
 
-# Display the model's details
 print(Churn_model_svm)
 
-# Make predictions for the Churn dataset
 Churn_predictions <- predict(Churn_model_svm, Churn_test[, 1:13], type = "response")
 
-# Convert the Churn_predictions to binary values (0 or 1) based on a threshold
 Churn_predictions <- ifelse(Churn_predictions > 0.5, 1, 0)
 
-# Display the model's evaluation metrics
 confusion_matrix <- table(Churn_predictions, Churn_test$Churn)
 print(confusion_matrix)
 
-# Plot the confusion matrix
 fourfoldplot(confusion_matrix, color = c("grey", "lightblue"), main = "Confusion Matrix")
