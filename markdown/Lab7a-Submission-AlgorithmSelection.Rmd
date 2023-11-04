@@ -1,3 +1,36 @@
+---
+title: "Business Intelligence Project"
+author: "<Knights>"
+date: "<Specify the date when you submitted the lab>"
+output:
+  github_document: 
+    toc: yes
+    toc_depth: 4
+    fig_width: 6
+    fig_height: 4
+    df_print: default
+editor_options:
+  chunk_output_type: console
+---
+
+# Student Details
+
+|                                              |     |
+|----------------------------------------------|-----|
+| **Student ID Number** && **Student Name**                       
+| 134834 - Emmanuel Kasio| 135356 - Ann Kigera |
+| 122883 - Michelle Guya| 136301 - Ian Nyameta |
+| 135230 - Peter Aringo |
+
+| **BBIT 4.2 Group**                           |  B |
+| **BI Project Group Name/ID (if applicable)** | Knights |
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+# Setup and Required Packages
+
+```{r setup-packages, echo=TRUE}
 .libPaths()
 
 lapply(.libPaths(), list.files)
@@ -8,76 +41,84 @@ if (require("languageserver")) {
   install.packages("languageserver", dependencies = TRUE,
                    repos = "https://cloud.r-project.org")
 }
+```
+# Install and Load the Required Packages
 
-#Install and Load the Required Packages ----
-## stats ----
+## stats
+```{r setup-stats, echo=TRUE}
 if (require("stats")) {
   require("stats")
 } else {
   install.packages("stats", dependencies = TRUE,
                    repos = "https://cloud.r-project.org")
 }
-
-## mlbench ----
+```
+## mlbench
+```{r setup-mlbench, echo=TRUE}
 if (require("mlbench")) {
   require("mlbench")
 } else {
   install.packages("mlbench", dependencies = TRUE,
                    repos = "https://cloud.r-project.org")
 }
-
-## caret ----
+```
+## caret
+```{r setup-caret, echo=TRUE}
 if (require("caret")) {
   require("caret")
 } else {
   install.packages("caret", dependencies = TRUE,
                    repos = "https://cloud.r-project.org")
 }
-
-## MASS ----
+```
+## MASS
+```{r setup-mass, echo=TRUE}
 if (require("MASS")) {
   require("MASS")
 } else {
   install.packages("MASS", dependencies = TRUE,
                    repos = "https://cloud.r-project.org")
 }
-
-## glmnet ----
+```
+## glmnet
+```{r setup-glmnet, echo=TRUE}
 if (require("glmnet")) {
   require("glmnet")
 } else {
   install.packages("glmnet", dependencies = TRUE,
                    repos = "https://cloud.r-project.org")
 }
-
-## e1071 ----
+```
+## e1071
+```{r setup-e1071, echo=TRUE}
 if (require("e1071")) {
   require("e1071")
 } else {
   install.packages("e1071", dependencies = TRUE,
                    repos = "https://cloud.r-project.org")
 }
-
-## kernlab ----
+```
+## kernlab
+```{r setup-kernlab, echo=TRUE}
 if (require("kernlab")) {
   require("kernlab")
 } else {
   install.packages("kernlab", dependencies = TRUE,
                    repos = "https://cloud.r-project.org")
 }
-
-## rpart ----
+```
+## rpart
+```{r setup-rpart, echo=TRUE}
 if (require("rpart")) {
   require("rpart")
 } else {
   install.packages("rpart", dependencies = TRUE,
                    repos = "https://cloud.r-project.org")
 }
-
-# A. Linear Algorithms ----
-## 1. Linear Regression ----
-### Linear Regression using Ordinary Least Squares without caret ----.
-
+```
+##Linear Regression
+This code chunk performs Linear Regression using the Ordinary Least Squares method for a dataset of student marks. It begins by reading the "Student_Marks.csv" data, visualizing it, and handling missing data. Then, it splits the data into training and testing sets, with 80% used for training and 20% for testing. The code proceeds to build a Linear Regression model ("Student_Marks_lm") with the training data and displays the model's summary. Predictions are made on the test set, and the Root Mean Squared Error (RMSE), Sum of Squared Residuals (SSR), Sum of Squared Total (SST), R-squared (R^2), and Mean Absolute Error (MAE) are calculated and displayed. The same process is repeated using the CARET package for comparison, with additional details like cross-validation and standardized preprocessing. This code chunk demonstrates the application of Linear Regression and model evaluation, including key metrics for assessing the model's performance.
+```{r Linear Regression}
 Student_Marks <- read_csv("data/Student_Marks.csv")
 View(Student_Marks)
 Student_no_na <- na.omit(Student_Marks)
@@ -150,6 +191,11 @@ absolute_errors <- abs(predictions - Student_marks_test$Marks)
 mae <- mean(absolute_errors)
 print(paste("MAE =", sprintf(mae, fmt = "%#.4f")))
 
+```
+
+##Logistic Regression
+This code chunk focuses on Logistic Regression, a fundamental machine learning algorithm used for classification tasks, applied to the "Customer Churn" dataset. Initially, the dataset is loaded and preprocessed, transforming the "Churn" variable into binary form for analysis. A split is made, with 70% of the data allocated for training and 30% for testing, ensuring the seed for randomness is set for replicability. A Logistic Regression model is then constructed with the "glm" function, modeling the probability of churn as a function of other variables. Key model statistics are displayed, aiding in understanding the model's performance. Predictions are generated on the test data, and a confusion matrix is computed to assess the model's classification accuracy. This code illustrates how to apply Logistic Regression for binary classification while adhering to best practices for data preparation, model training, and evaluation.
+```{r Logistic Regression}
 ## 2. Logistic Regression ----
 ### Logistic Regression with caret ----
 library(readr)
@@ -176,8 +222,15 @@ predictions <- ifelse(probabilities > 0.5, 1, 0)
 confusion_matrix <- table(predictions, Customer_Churn_test$Churn)
 print(confusion_matrix)
 
-## 3. Linear Discriminant Analysis ----
-### Linear Discriminant Analysis without caret
+
+```
+
+##Linear Discriminant Analysis
+This code chunk deals with Linear Discriminant Analysis (LDA) applied to the "Crop_recommendation" dataset. Initially, the dataset is loaded and preprocessed by converting the label from a character variable into a binary format (0 or 1). The data is then split into training and testing subsets using a data partitioning technique. LDA is performed on the training data to model the label as a function of other variables. The model is displayed to gain insights into its parameters and performance. Predictions are made on the test data, and a confusion matrix is computed to assess the classification accuracy of the LDA model.
+
+The second part of the chunk showcases how to use LDA with caret, a package that streamlines the modeling process. It includes the same data preprocessing steps and employs caret's "train" function with the "lda2" method for classification. The model's performance is evaluated using the "Accuracy" metric, and a confusion matrix is generated to visualize the classification results. This code illustrates how Linear Discriminant Analysis can be applied both traditionally and with the caret package, showcasing best practices for dataset handling, model building, and performance evaluation in a classification problem.
+
+```{r Linear Discriminant Analysis}
 library(readr)
 Crop_recommendation <- read_csv("data/Crop_recommendation.csv")
 Crop_recommendation$label <- ifelse(Crop_recommendation$label == "rice", 0, 1)
@@ -239,8 +292,11 @@ print(confusion_matrix)
 fourfoldplot(as.table(confusion_matrix), color = c("grey", "lightblue"),
              main = "Confusion Matrix")
 
+```
 
-## 4. Regularized Linear Regression ----
+##Regularized Linear Regression
+This code chunk demonstrates the application of regularized linear regression using the "glmnet" method in R. It starts by loading the "Student_Marks" dataset and removing rows with missing values, ensuring data cleanliness. Subsequently, the dataset is split into training and testing sets, and a five-fold cross-validation process is set up using caret's "trainControl." The "train" function is then applied to train a glmnet regression model with "RMSE" as the evaluation metric, centered and scaled preprocessing, and cross-validation. The code prints the model results, including RMSE, SSR (Sum of Squared Residuals), SST (Sum of Squared Totals), R-squared, and MAE (Mean Absolute Error) to evaluate the performance of the regularized linear regression model. This code exemplifies best practices in handling datasets, applying regularization techniques, and assessing model performance in a regression problem.
+```{r Regularized Linear Regression ----}
 Student_Marks <- read.csv("data/Student_Marks.csv")
 
 student_no_na <- na.omit(Student_Marks)
@@ -276,11 +332,11 @@ absolute_errors <- abs(predictions - student_test$Marks)
 mae <- mean(absolute_errors)
 print(paste("MAE =", sprintf(mae, fmt = "%#.4f")))
 
-# B. Non-Linear Algorithms ----
-## 1. Classification and Regression Trees ----
-### Decision tree for a regression problem without CARET ----
+```
 
-#### Load and split the dataset ----
+##Classification and Regression Trees (CART)
+This code chunk utilizes the CART algorithm to build a decision tree for a customer churn classification problem. It starts by loading the dataset, splitting it into training and testing sets, and then creating a CART model. The model's performance is evaluated using metrics like RMSE, SSR, SST, R-squared, and MAE to assess how well it predicts customer churn.
+```{r Classification and Regression Trees (CART)}
 library(readr)
 Customer_Churn <- read_csv("data/Customer Churn.csv")
 View(Customer_Churn)
@@ -313,9 +369,11 @@ absolute_errors <- abs(predictions - Customer_Churn_test$Churn)
 mae <- mean(absolute_errors)
 cat("MAE =", sprintf("%.4f", mae), "\n")
 
+```
 
-## 2.  Naive Bayes----
-### Naïve Bayes Classifier for a Classification Problem with CARET ----
+##Naive Bayes
+In this code, the Naive Bayes algorithm is used for classification. It reads the "Ionosphere" dataset and splits it into training and testing sets. The code trains a Naive Bayes classifier and evaluates its performance using a confusion matrix to analyze the model's accuracy and effectiveness in classifying ionospheric radar returns.
+```{r Naive Bayes}
 data(Ionosphere)
 
 train_index <- createDataPartition(Ionosphere$Class, p = 0.7, list = FALSE)
@@ -334,10 +392,12 @@ print(confusion_matrix)
 
 fourfoldplot(as.table(confusion_matrix), color = c("grey", "lightblue"),
              main = "Confusion Matrix")
+```
 
 
-## 3.  k Nearest Neighbours----
-## kNN for a classification problem with CARET's train function ----
+##k Nearest Neighbours
+This code implements kNN classification for a customer churn problem. After loading and splitting the dataset, kNN is employed as a classification method. The code leverages cross-validation and scaling for better performance, and the caret package is used to assess the model's accuracy and generate a confusion matrix.
+```{r k Nearest Neighbors (kNN)}
 library(readr)
 Customer_Churn <- read_csv("data/Customer Churn.csv")
 
@@ -362,9 +422,12 @@ print(confusion_matrix)
 
 fourfoldplot(as.table(confusion_matrix), color = c("grey", "lightblue"),
              main = "Confusion Matrix")
+```
 
-## 4.  Support Vector Machines----
-### SVM Classifier for a classification problem without CARET ----
+##SVM
+In this code chunk, SVM is employed for a customer churn classification task. The dataset is loaded, and after data splitting, an SVM classifier is trained with the "rbfdot" kernel. The model's predictions are evaluated, and a confusion matrix is generated to assess its effectiveness in classifying customer churn.
+
+```{r Support Vector Machines (SVM)}
 library(readr)
 Customer_Churn <- read_csv("data/Customer Churn.csv")
 
@@ -385,3 +448,5 @@ confusion_matrix <- table(Churn_predictions, Churn_test$Churn)
 print(confusion_matrix)
 
 fourfoldplot(confusion_matrix, color = c("grey", "lightblue"), main = "Confusion Matrix")
+
+```
